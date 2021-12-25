@@ -18,7 +18,7 @@ import { UserToken } from './auth/Models/UserToken.model';
       host: process.env.POSTGRES_HOST,
       port: Number(process.env.POSTGRESS_PORT),
       username: process.env.POSTGRES_USER,
-      password: 'root',
+      password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
       models: [User, UserToken],
       autoLoadModels: true,
