@@ -18,10 +18,10 @@ export class AuthService {
   ) {}
 
   async login(userDto: CreateUserDto) {
-    let user = await this.validateUser(userDto);
-    const accessToken = await this.generateAccessToken(user)
-    const refreshToken = await this.generateRefreshToken(user)
-    return {user, accessToken};
+    const user = await this.validateUser(userDto);
+    const accessToken = await this.generateAccessToken(user);
+    const refreshToken = await this.generateRefreshToken(user);
+    return { user, accessToken, refreshToken };
   }
 
   async registration(userDto: CreateUserDto) {
@@ -33,32 +33,31 @@ export class AuthService {
       );
     }
     const hashPassword = await bcrypt.hash(userDto.password, 5);
-    const user = await this.userService.createUser({
+    await this.userService.createUser({
       ...userDto,
       password: hashPassword,
     });
-    return 'User was created'
+    return 'User was created';
   }
 
   private async generateAccessToken(user: User) {
     const payload = { email: user.email, id: user.id };
     const token = this.jwtService.sign(payload, {
-          secret: process.env.JWT_ACCESS_TOKEN_SECRET,
-          expiresIn: '24h',
-        })
-    console.log(token)
-    return token
+      secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+      expiresIn: '24h',
+    });
+    console.log(token);
+    return token;
   }
-
 
   private async generateRefreshToken(user: User) {
     const payload = { email: user.email, id: user.id };
     const token = this.jwtService.sign(payload, {
-          secret: process.env.JWT_REFRESH_TOKEN_SECRET,
-          expiresIn: '1440h',
-        })
-    console.log(token)
-    return token
+      secret: process.env.JWT_REFRESH_TOKEN_SECRET,
+      expiresIn: '1440h',
+    });
+    console.log(token);
+    return token;
   }
 
   private async validateUser(userDto: CreateUserDto) {
