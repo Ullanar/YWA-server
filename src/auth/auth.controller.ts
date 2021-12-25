@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Response } from '@nestjs/common';
+import { Body, Controller, Post, Req, Response } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { addDays } from 'date-fns';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -21,6 +21,12 @@ export class AuthController {
         httpOnly: true,
       })
       .json({ user, accessToken });
+  }
+
+  @Post('/refresh')
+  async refresh(@Req() req, @Response() res) {
+    const { user, accessToken } = await this.authService.refresh(req);
+    return res.json({ user, accessToken });
   }
 
   @Post('/registration')

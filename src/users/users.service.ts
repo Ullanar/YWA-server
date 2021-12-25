@@ -20,4 +20,10 @@ export class UsersService {
       where: { email },
     });
   }
+
+  async getUserById(id) {
+    return await this.userRepository.findOne({
+      where: { id },
+    });
+  }
 }
