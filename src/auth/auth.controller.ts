@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Req, Response } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { addDays } from 'date-fns';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -35,5 +35,18 @@ export class AuthController {
   @Post('/registration')
   registration(@Body() userDto: CreateUserDto) {
     return this.authService.registration(userDto);
+  }
+
+  @Post('/logout')
+  async logout(@Req() req, @Response() res) {
+    await this.authService.logout(req);
+    return res
+      .cookie('refreshToken', '', {
+        expires: addDays(new Date(), -1),
+        sameSite: 'strict',
+        httpOnly: true,
+      })
+      .status(200)
+      .json('Logout success');
   }
 }

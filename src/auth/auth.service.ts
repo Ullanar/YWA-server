@@ -35,6 +35,20 @@ export class AuthService {
     return { user, accessToken, refreshToken };
   }
 
+  async logout(req) {
+    try {
+      const user = await this.userService.getUserById(req.body.id);
+      const userToken = await UserToken.findOne({ where: { userId: user.id } });
+      await userToken.destroy();
+      return true;
+    } catch (e) {
+      throw new HttpException(
+        'Ошибка сервера',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async registration(userDto: CreateUserDto) {
     const candidate = await this.userService.getUserByEmail(userDto.email);
     if (candidate) {
