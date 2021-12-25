@@ -18,8 +18,10 @@ export class AuthService {
   ) {}
 
   async login(userDto: CreateUserDto) {
-    const user = await this.validateUser(userDto);
-    return this.generateToken(user);
+    let user = await this.validateUser(userDto);
+    const accessToken = await this.generateAccessToken(user)
+    const refreshToken = await this.generateRefreshToken(user)
+    return {user, accessToken};
   }
 
   async registration(userDto: CreateUserDto) {
@@ -35,14 +37,28 @@ export class AuthService {
       ...userDto,
       password: hashPassword,
     });
-    return this.generateToken(user);
+    return 'User was created'
   }
 
-  private async generateToken(user: User) {
+  private async generateAccessToken(user: User) {
     const payload = { email: user.email, id: user.id };
-    return {
-      token: this.jwtService.sign(payload),
-    };
+    const token = this.jwtService.sign(payload, {
+          secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+          expiresIn: '24h',
+        })
+    console.log(token)
+    return token
+  }
+
+
+  private async generateRefreshToken(user: User) {
+    const payload = { email: user.email, id: user.id };
+    const token = this.jwtService.sign(payload, {
+          secret: process.env.JWT_REFRESH_TOKEN_SECRET,
+          expiresIn: '1440h',
+        })
+    console.log(token)
+    return token
   }
 
   private async validateUser(userDto: CreateUserDto) {
