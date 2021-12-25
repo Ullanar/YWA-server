@@ -1,5 +1,6 @@
 import { Body, Controller, Post, Response } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { addDays } from 'date-fns';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 
@@ -13,12 +14,9 @@ export class AuthController {
     const { user, accessToken, refreshToken } = await this.authService.login(
       userDto,
     );
-    console.log(user);
-    console.log(accessToken);
-    console.log(refreshToken);
     return res
       .cookie('refreshToken', refreshToken, {
-        expires: new Date(),
+        expires: addDays(new Date(), 60),
         sameSite: 'strict',
         httpOnly: true,
       })
