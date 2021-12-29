@@ -1,24 +1,18 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User } from './user.model';
+import { MessagePattern } from '@nestjs/microservices';
 
-@ApiTags('Users')
-@Controller('users')
+@Controller()
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @ApiOperation({ summary: 'Create user' })
-  @ApiResponse({ status: 200, type: User })
-  @Post()
+  @MessagePattern('create_user')
   create(@Body() userDto: CreateUserDto) {
     return this.usersService.createUser(userDto);
   }
 
-  @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, type: [User] })
-  @Get()
+  @MessagePattern('get_users')
   getAll() {
     return this.usersService.getAllUsers();
   }

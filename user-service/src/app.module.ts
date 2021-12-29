@@ -24,7 +24,7 @@ import { UserToken } from './auth/Models/UserToken.model';
       autoLoadModels: true,
     }),
     UsersModule,
-    AuthModule,
+    // AuthModule,
   ],
 })
 export class AppModule {}
