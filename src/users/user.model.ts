@@ -1,4 +1,4 @@
-import {BelongsTo, Column, DataType, HasOne, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasOne, Model, Table } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserToken } from 'src/auth/Models/UserToken.model';
 
@@ -14,9 +14,8 @@ export class User extends Model<User, UserCreationAttributes> {
     description: 'ID - auto increment',
     required: false,
   })
-
   @HasOne(() => UserToken, {
-    as: 'token'
+    as: 'token',
   })
   @Column({
     type: DataType.INTEGER,
