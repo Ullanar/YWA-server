@@ -25,5 +25,13 @@ services:
     ports:
       - 5432:5432
 
+  redis:
+    image: redis:6
+    env_file:
+      - .env
+    ports:
+      - 6379:6379
+
+
 volumes:
   postgres_data:
